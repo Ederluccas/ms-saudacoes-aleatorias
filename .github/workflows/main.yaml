@@ -84,8 +84,13 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
+          registry: docker.io
           username: ${{ env.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASS }} # Segredo configurado no GitHub
+
+      - name: Verify Docker identity
+        run: |
+          echo "Usuário logado no Docker CLI:" && docker whoami || true
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
