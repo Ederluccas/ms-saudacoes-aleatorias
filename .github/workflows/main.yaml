@@ -9,7 +9,7 @@ on:
       - main
 
 env:
-  DOCKER_USER: ozorest84
+  DOCKER_USER: eluccas
   SERVICE_NAME: saudacoes-aleatorias
 
 jobs:
