@@ -5,7 +5,8 @@ import (
 
 	"github.com/avanti-dvp/ms-saudacoes-aleatorias/models"
 
-	"gorm.io/driver/sqlite"
+	// Pure Go SQLite driver (no CGO required)
+	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
 )
 
@@ -13,15 +14,16 @@ var DB *gorm.DB
 
 // ConnectDatabase inicializa a conexão com o banco de dados SQLite e realiza a migração.
 func ConnectDatabase() {
-	db, err := gorm.Open(sqlite.Open("file:greetings.db?_journal_mode=WAL&_mutex=no&_fk=true"), &gorm.Config{})
+	// Use a simple filename; glebarez/sqlite supports it and avoids CGO dependencies
+	db, err := gorm.Open(sqlite.Open("greetings.db"), &gorm.Config{})
 	if err != nil {
-		log.Fatal("Falha ao conectar ao banco de dados!")
+		log.Fatalf("Falha ao conectar ao banco de dados: %v", err)
 	}
 
 	// AutoMigrate cria a tabela 'greetings' baseada no modelo
 	err = db.AutoMigrate(&models.Greeting{})
 	if err != nil {
-		log.Fatal("Falha ao migrar o banco de dados!")
+		log.Fatalf("Falha ao migrar o banco de dados: %v", err)
 	}
 
 	DB = db

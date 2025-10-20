@@ -10,7 +10,8 @@ import (
 	"github.com/avanti-dvp/ms-saudacoes-aleatorias/database"
 	"github.com/avanti-dvp/ms-saudacoes-aleatorias/models"
 	"github.com/gin-gonic/gin"
-	"gorm.io/driver/sqlite"
+	// Use pure-Go SQLite driver to avoid CGO dependency in tests
+	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
 )
 
