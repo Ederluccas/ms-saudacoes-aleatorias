@@ -31,6 +31,10 @@ func main() {
 	// Uma forma ainda mais simples para permitir TODAS as origens é:
 	// router.Use(cors.Default()) // <- Alternativa simples que já permite '*'
 
+	// Servir arquivos estáticos (ex.: fontes, CSS, imagens) em /static
+	// Coloque seus assets na pasta ./static e referencie como /static/... no front-end
+	router.Static("/static", "./static")
+
 	// Define as rotas da API
 	api := router.Group("/api")
 	{

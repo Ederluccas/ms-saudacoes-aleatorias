@@ -30,6 +30,7 @@ WORKDIR /app
 
 # Copia o binário compilado do estágio 'builder' para a imagem final.
 COPY --from=builder /app/main .
+COPY --from=builder /app/static ./static
 
 # Copia o banco de dados inicial, se necessário.
 # Como o banco de dados 'greetings.db' é criado na primeira execução, não precisamos copiá-lo.
