@@ -5,7 +5,7 @@ terraform {
     }
   }
 }
-provider "koyeb" {
+provider "koyeb" { 
   #
   # Use the KOYEB_TOKEN env variable to set your Koyeb API token.
   #
@@ -25,6 +25,10 @@ resource "koyeb_service" "my-service" {
     ports {
       port     = var.container_port
       protocol = "http"
+    }
+    envs {
+      key   = "PORT"
+      value = tostring(var.container_port)
     }
     scalings {
       min = 0
