@@ -72,6 +72,15 @@ jobs:
         uses: docker/setup-buildx-action@v3
         # Cria um builder do Docker que suporta builds multi-plataforma
 
+      - name: Validate Docker Hub credentials
+        run: |
+          if [ -z "${{ env.DOCKER_USER }}" ] || [ -z "${{ secrets.DOCKER_PASS }}" ]; then
+            echo "::error::Credenciais do Docker Hub ausentes. Configure DOCKER_USER no env do workflow e DOCKER_PASS em Settings > Secrets and variables > Actions."
+            echo "Usuário esperado (env.DOCKER_USER): '${{ env.DOCKER_USER }}'"
+            echo "Token/Password (secrets.DOCKER_PASS): $( [ -z "${{ secrets.DOCKER_PASS }}" ] && echo 'NÃO DEFINIDO' || echo 'DEFINIDO' )"
+            exit 1
+          fi
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
