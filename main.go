@@ -2,6 +2,8 @@ package main
 
 import (
 	"log"
+	"os"
+	"fmt"
 
 	"github.com/avanti-dvp/ms-saudacoes-aleatorias/database"
 	"github.com/avanti-dvp/ms-saudacoes-aleatorias/handlers"
@@ -41,9 +43,14 @@ func main() {
 		api.GET("/saudacoes/aleatorio", handlers.GetRandomGreeting)
 	}
 
-	// Inicia o servidor na porta 8080
-	// Você pode acessar em http://localhost:8080
-	if err := router.Run(":8080"); err != nil {
+	// Porta configurável via variável de ambiente PORT (padrão 8080)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	// Inicia o servidor
+	// Ex.: PORT=8000 -> escuta em :8000
+	if err := router.Run(fmt.Sprintf(":%s", port)); err != nil {
 		log.Fatalf("failed to run server: %v", err)
 	}
 }
