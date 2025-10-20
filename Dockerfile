@@ -2,10 +2,6 @@
 # Use uma imagem do Go baseada em Alpine. A versão pode ser ajustada.
 FROM golang:1.24-alpine AS builder
 
-# Instale as ferramentas de compilação C (gcc, etc.)
-# 'build-base' é um meta-pacote que inclui o necessário em Alpine.
-RUN apk add --no-cache build-base gcc
-
 # Defina o diretório de trabalho dentro do container
 WORKDIR /app
 
@@ -18,11 +14,11 @@ RUN go mod download
 # Copie o restante do código-fonte da sua aplicação
 COPY . .
 
-# Compile a aplicação com CGO habilitado.
-# -a: Força a reconstrução de pacotes que estão desatualizados.
-# -installsuffix cgo: Evita conflitos entre pacotes CGO e não-CGO.
-# O resultado é um binário estaticamente vinculado, que não precisa da libsqlite3.so na imagem final.
-RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o /app/main .
+# Compile a aplicação sem CGO (usamos driver SQLite puro Go) e respeite TARGETOS/TARGETARCH do Buildx
+ARG TARGETOS
+ARG TARGETARCH
+ENV CGO_ENABLED=0
+RUN GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH:-amd64} go build -o /app/main .
 
 # --- Estágio Final ---
 # Define a imagem final, que será muito menor.
